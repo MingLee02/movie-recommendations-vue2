@@ -8,3 +8,10 @@ This is adding a vue 2 frontend with a flask wrapper on https://github.com/MingL
 backend
 	`cd api`
 	`pip install -r requirements.txt`
+	`python get_cinemas.py`
+
+frontend
+	`npm install -g @vue/cli`
+	`cd web`
+	`npm install`
+	
