@@ -5,7 +5,11 @@ from cinema_listings import get_cinema_listings
 
 import googlemaps
 
+from flask import Flask
+app = Flask(__name__)
 
+
+@app.route("/address/<string:postcode>/")
 def get_origin(postcode):
     address = googlemaps.Client(key='AIzaSyCwDPJFF4y3udU12hdYEUx04Rss0dRN-bk')
     args = {
@@ -71,48 +75,5 @@ def get_distances(origin, cinemas):
     return cinemas
 
 
-def main():
-    postcode = None
-    selected_cinema = None
-    cinema_id = None
-
-    while not postcode:
-        postcode = input('please input postcode or q to quit: ')
-
-    if postcode == 'q':
-        print('quitting App')
-        return
-
-    origin = get_origin(postcode)
-
-    if origin:
-        cinemas = get_cinemas(origin)
-        cinemas = get_distances(origin, cinemas)
-        cinemas = sorted(cinemas, key=lambda d: d['distance']['value'])
-
-        for cinema in cinemas:
-            print(cinema)
-
-        while not selected_cinema:
-            selected_cinema = input('please select cinema by inputting cinema id: ')
-
-        for cinema in cinemas:
-            if cinema['cinema-id'] == int(selected_cinema):
-                chosen_cinema = cinema
-
-        print('you chose {}: at {}'.format(chosen_cinema['name'], chosen_cinema['address']))
-        web_address = get_cinema_site(chosen_cinema['place-id'])
-
-        movies = get_cinema_listings(web_address, chosen_cinema['name'])
-
-        if len(movies) > 0:
-            recommended_movies = recommend_film(movies)
-            print('Today Imdb Recommends')
-
-            for movie in recommended_movies:
-                pprint(movie)
-        else:
-            print('There are no more movies playing today')
-
 if __name__ == '__main__':
-    main()
+    app.run(debug=True)
