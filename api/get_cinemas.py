@@ -5,7 +5,7 @@ from cinema_listings import get_cinema_listings
 
 import googlemaps
 
-from flask import Flask
+from flask import Flask, jsonify
 app = Flask(__name__)
 
 
@@ -16,8 +16,8 @@ def get_origin(postcode):
         'address': postcode
     }
     result = address.geocode(args)
-
-    return result[0]['geometry']['location']
+    
+    return jsonify(result[0])
 
 
 def get_cinemas(address):
