@@ -1,57 +1,76 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://github.com/vuejs/vue-cli/tree/dev/docs" target="_blank">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org/en/essentials/getting-started.html" target="_blank">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org/en/intro.html" target="_blank">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org/en" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
-  </div>
+    <div>
+        <h2>Find Local Cinemas</h2>
+        <p>{{ address }}</p>
+        <p>No spaces in postcode. This will render the search inaccurate.</p>
+        <input v-model="postcode" v-on:keyup.enter="getAddress" placeholder="Enter postcode">
+        <div id="map"></div>
+    </div>    
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+    import axios from 'axios'
+    var address = ' ';
+    var postcode = ' ';
+    axios.defaults.headers.common = {
+        "X-Requested-With": "XMLHttpRequest"
+    };
+
+    export default {
+        data() {
+            return {
+                address: address,
+                postcode: postcode,
+            };
+        },
+        name: 'Gplaces',
+        methods: {
+            getAddress: function () {
+                var self = this;
+                axios.get('get_origin/' + this.postcode + '/')
+                  .then((response) => {
+                        // var results =  response.json.results[0]
+                        this.address = response.data.formatted_address
+                        // var placeId = results.place_id
+                        var latLang = response.data.geometry.location
+                        console.log(latLang)
+                        this.drawMap(latLang)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            },
+            drawMap: function (latLang) {
+                console.log('123')
+                var myLatLng = latLang;
+
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 15,
+                    center: myLatLng
+                });
+
+                new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    title: 'Hello World!',
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                });
+
+                this.getCinemas(myLatLng, map);
+            },
+            getCinemas: function (latLang, map) {
+               
+
+            }
+        }
+    }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style>
+    #map {
+        height: 100%;
+        width: 300px;
+        overflow: auto !important;
+        position: fixed !important;
+    }
 </style>
