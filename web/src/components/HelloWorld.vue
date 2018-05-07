@@ -2,7 +2,6 @@
     <div>
         <h2>Find Local Cinemas</h2>
         <p>{{ address }}</p>
-        <p>No spaces in postcode. This will render the search inaccurate.</p>
         <input v-model="postcode" v-on:keyup.enter="getAddress" placeholder="Enter postcode">
         <div id="map"></div>
     </div>    
@@ -12,9 +11,7 @@
     import axios from 'axios'
     var address = ' ';
     var postcode = ' ';
-    axios.defaults.headers.common = {
-        "X-Requested-With": "XMLHttpRequest"
-    };
+    var url = "http://127.0.0.1:5000/"
 
     export default {
         data() {
@@ -27,7 +24,7 @@
         methods: {
             getAddress: function () {
                 var self = this;
-                axios.get('get_origin/' + this.postcode + '/')
+                axios.get(url + "address/" + this.postcode)
                   .then((response) => {
                         // var results =  response.json.results[0]
                         this.address = response.data.formatted_address

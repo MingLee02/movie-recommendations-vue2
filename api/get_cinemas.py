@@ -6,12 +6,17 @@ from cinema_listings import get_cinema_listings
 import googlemaps
 
 from flask import Flask, jsonify
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/address/<string:postcode>/")
 def get_origin(postcode):
     address = googlemaps.Client(key='AIzaSyCwDPJFF4y3udU12hdYEUx04Rss0dRN-bk')
+    postcode = postcode.replace(' ', '')
+
     args = {
         'address': postcode
     }

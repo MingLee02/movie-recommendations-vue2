@@ -1,6 +1,7 @@
 beautifulsoup4==4.6.0
 chardet==3.0.4
 Flask==1.0.2
+Flask-Cors==3.0.4
 googlemaps==2.5.1
 idna==2.6
 IMDbPY==6.5
