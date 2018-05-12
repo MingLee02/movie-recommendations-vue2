@@ -62,7 +62,8 @@ def get_cinemas(address):
                     'name': cinema['name'],
                     'rating': cinema['rating'],
                     'address': cinema['formatted_address'],
-                    'place-id': cinema['place_id']
+                    'place-id': cinema['place_id'],
+                    'latlng': cinema['geometry']['location'],
                 }
             )
             num += 1

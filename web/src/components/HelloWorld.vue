@@ -30,6 +30,7 @@
                         this.address = response.data.formatted_address
                         // var placeId = results.place_id
                         var latLang = response.data.geometry.location
+                        console.log(latLang)
                         this.drawMap(latLang)
                     })
                     .catch((err) => {
@@ -52,16 +53,30 @@
                 this.getCinemas(latLang, map);
             },
             getCinemas: function (latLang, map) {
-
+              var locations = []
                var origin = latLang.lat + ":" + latLang.lng
                 axios.get(url + "api/cinema-list/" +  origin)
                   .then((response) => {
-                        console.log(response)
+                      var x;
+                      for (x in response['data']) {
+                        locations.push(response['data'][x]['latlng']) 
+                      }
+                      this.addMarkers(locations, map)
                     })
                     .catch((err) => {
                         console.log(err);
                     });
-            }
+            },
+            addMarkers: function (locations, map) {
+               console.log(locations)
+               console.log(map)
+                for (var i = 0; i < locations.length; i++) { 
+                  new google.maps.Marker({
+                    position: locations[i],
+                    map: map
+                  });
+                }
+            },
         }
     }
 </script>
