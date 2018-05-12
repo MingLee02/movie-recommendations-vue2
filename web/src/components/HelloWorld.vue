@@ -28,20 +28,15 @@
 
 <script>
 	import axios from 'axios'
-	var address = '';
-	var postcode = '';
-	var cinemaList = '';
-	var recommendedFilms = '';
-
 	var url = "http://127.0.0.1:5000/"
 
 	export default {
 		data() {
 			return {
-				address: address,
-				postcode: postcode,
-				cinemaList: cinemaList,
-				recommendedFilms: recommendedFilms
+				address: '',
+				postcode: '',
+				cinemaList: '',
+				recommendedFilms: ''
 			};
 		},
 		name: 'Gplaces',
@@ -67,7 +62,7 @@
 				new google.maps.Marker({
 					position: latLang,
 					map: map,
-					title: 'Hello World!',
+					title: 'Origin',
 					icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
 				});
 
@@ -81,7 +76,7 @@
 						var x;
 						this.cinemaList = response['data'];
 						for (x in response['data']) {
-							locations.push(response['data'][x]['latlng']) 
+							locations.push(response['data'][x]) 
 						}
 						this.addMarkers(locations, map)
 					})
@@ -90,10 +85,12 @@
 					});
 			},
 			addMarkers: function (locations, map) {
+				console.log(locations)
 				for (var i = 0; i < locations.length; i++) { 
 					new google.maps.Marker({
-						position: locations[i],
-						map: map
+						position: locations[i]['latlng'],
+						map: map,
+						title: locations[i]['name'],
 					});
 				}
 			},
