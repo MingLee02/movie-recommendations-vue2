@@ -4,6 +4,11 @@
         <p>{{ address }}</p>
         <input v-model="postcode" v-on:keyup.enter="getAddress" placeholder="Enter postcode">
         <div id="map"></div>
+        <ul v-if="cinemaList.length > 0">
+          <li v-for="todo in cinemaList">
+              {{ todo }}
+          </li>
+        </ul>
     </div>    
 </template>
 
@@ -11,6 +16,7 @@
     import axios from 'axios'
     var address = ' ';
     var postcode = ' ';
+    var cinemaList = '';
     var url = "http://127.0.0.1:5000/"
 
     export default {
@@ -18,6 +24,7 @@
             return {
                 address: address,
                 postcode: postcode,
+                cinemaList: cinemaList
             };
         },
         name: 'Gplaces',
@@ -58,6 +65,7 @@
                 axios.get(url + "api/cinema-list/" +  origin)
                   .then((response) => {
                       var x;
+                      this.cinemaList = response['data']
                       for (x in response['data']) {
                         locations.push(response['data'][x]['latlng']) 
                       }
