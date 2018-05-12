@@ -5,8 +5,11 @@
         <input v-model="postcode" v-on:keyup.enter="getAddress" placeholder="Enter postcode">
         <div id="map"></div>
         <ul v-if="cinemaList.length > 0">
-          <li v-for="todo in cinemaList">
-              {{ todo }}
+          <li v-for="todo in cinemaList" v-on:click="selectCinema(todo)">
+              {{ todo.name }}
+              {{ todo.rating }}
+              {{ todo.distance }}
+              {{ todo.address }}
           </li>
         </ul>
     </div>    
@@ -65,7 +68,8 @@
                 axios.get(url + "api/cinema-list/" +  origin)
                   .then((response) => {
                       var x;
-                      this.cinemaList = response['data']
+                      this.cinemaList = response['data'];
+                      console.log(response['data'])
                       for (x in response['data']) {
                         locations.push(response['data'][x]['latlng']) 
                       }
@@ -76,8 +80,6 @@
                     });
             },
             addMarkers: function (locations, map) {
-               console.log(locations)
-               console.log(map)
                 for (var i = 0; i < locations.length; i++) { 
                   new google.maps.Marker({
                     position: locations[i],
@@ -85,6 +87,11 @@
                   });
                 }
             },
+            selectCinema: function (cinema) {
+              console.log('clicked')
+              console.log(cinema.name)
+              console.log(cinema.address)
+            }
         }
     }
 </script>

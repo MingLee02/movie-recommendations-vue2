@@ -38,7 +38,7 @@ def get_cinemas_list_with_distances(address):
     cinemas = get_distances(origin, cinemas)
     cinemas = sorted(cinemas, key=lambda d: d['distance']['value'])
 
-    return jsonify(cinemas[:6])
+    return jsonify(cinemas[:5])
 
 
 def get_cinemas(address):
