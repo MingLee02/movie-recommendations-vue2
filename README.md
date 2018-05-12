@@ -14,4 +14,4 @@ frontend
 	`npm install -g @vue/cli`
 	`cd web`
 	`npm install`
-	
+	`npm run serve`

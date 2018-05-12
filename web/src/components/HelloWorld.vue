@@ -24,13 +24,12 @@
         methods: {
             getAddress: function () {
                 var self = this;
-                axios.get(url + "address/" + this.postcode)
+                axios.get(url + "api/address/" + this.postcode)
                   .then((response) => {
                         // var results =  response.json.results[0]
                         this.address = response.data.formatted_address
                         // var placeId = results.place_id
                         var latLang = response.data.geometry.location
-                        console.log(latLang)
                         this.drawMap(latLang)
                     })
                     .catch((err) => {
@@ -38,26 +37,30 @@
                     });
             },
             drawMap: function (latLang) {
-                console.log('123')
-                var myLatLng = latLang;
-
                 var map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 15,
-                    center: myLatLng
+                    center: latLang
                 });
 
                 new google.maps.Marker({
-                    position: myLatLng,
+                    position: latLang,
                     map: map,
                     title: 'Hello World!',
                     icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
                 });
 
-                this.getCinemas(myLatLng, map);
+                this.getCinemas(latLang, map);
             },
             getCinemas: function (latLang, map) {
-               
 
+               var origin = latLang.lat + ":" + latLang.lng
+                axios.get(url + "api/cinema-list/" +  origin)
+                  .then((response) => {
+                        console.log(response)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
         }
     }

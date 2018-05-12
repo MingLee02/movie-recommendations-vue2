@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/address/<string:postcode>/")
+@app.route("/api/address/<string:postcode>/")
 def get_origin(postcode):
     address = googlemaps.Client(key='AIzaSyCwDPJFF4y3udU12hdYEUx04Rss0dRN-bk')
     postcode = postcode.replace(' ', '')
@@ -23,6 +23,22 @@ def get_origin(postcode):
     result = address.geocode(args)
     
     return jsonify(result[0])
+
+
+@app.route("/api/cinema-list/<string:address>/")
+def get_cinemas_list_with_distances(address):
+    split_address = address.split(':')
+
+    origin = {
+        "lat": split_address[0],
+        "lng": split_address[1]
+    }
+
+    cinemas = get_cinemas(origin)
+    cinemas = get_distances(origin, cinemas)
+    cinemas = sorted(cinemas, key=lambda d: d['distance']['value'])
+
+    return jsonify(cinemas[:6])
 
 
 def get_cinemas(address):
