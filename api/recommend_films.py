@@ -4,7 +4,6 @@ from imdb import IMDb
 def recommend_film(items=None):
     ia = IMDb()
     recommend_list = []
-    print('Attempting to get recommendations from imdb')
     for item in items:
         movies = ia.search_movie(item)
         for movie in movies:

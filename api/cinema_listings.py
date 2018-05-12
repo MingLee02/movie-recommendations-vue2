@@ -50,7 +50,6 @@ def get_cinema_listings(website=None, name=None):
     if 'Odeon' not in name and 'Odeon' is not name:
         for movie in movies:
             movies_list.append(movie.text)
-
     return movies_list
 
 

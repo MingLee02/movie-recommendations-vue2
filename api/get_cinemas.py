@@ -58,15 +58,13 @@ def get_cinemas(address):
         if any(c in cinema['name'] for c in ['Cineworld', 'Vue', 'Odeon']):
             cinema_list.append(
                 {
-                    'cinema-id': num,
                     'name': cinema['name'],
                     'rating': cinema['rating'],
                     'address': cinema['formatted_address'],
-                    'place-id': cinema['place_id'],
+                    'placeId': cinema['place_id'],
                     'latlng': cinema['geometry']['location'],
                 }
             )
-            num += 1
     return cinema_list
 
 
@@ -77,6 +75,16 @@ def get_cinema_site(cinemaID):
         place_id=cinemaID,
     )
     return result['result']['website']
+
+
+@app.route("/api/get-recommendations/<string:cinemaID>/<string:cinemaName>")
+def get_recommendations(cinemaID, cinemaName):
+    website = get_cinema_site(cinemaID)
+    movies = get_cinema_listings(website, cinemaName)
+    results = recommend_film(movies)
+
+    return jsonify(results)
+
 
 def get_distances(origin, cinemas):
     distance = googlemaps.Client(key='AIzaSyBP5NFMUwDztx4CHhIEKSv-U0W2y-6mpRM ')
